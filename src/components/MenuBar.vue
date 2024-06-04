@@ -31,7 +31,7 @@ const routes = {
   },
   {
     path: "/my_history",
-    name: "Story History"
+    name: "My Stories History"
   }
   ],
   2:[
@@ -45,7 +45,7 @@ const routes = {
   },
   {
     path: "/my_history",
-    name: "Story Stories"
+    name: "My Stories History"
   },
      {
     path: "/story_countries",
