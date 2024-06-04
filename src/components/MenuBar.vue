@@ -30,8 +30,8 @@ const routes = {
     name: "Create a Story"
   },
   {
-    path: "/my_stories",
-    name: "My Stories"
+    path: "/my_history",
+    name: "Story History"
   }
   ],
   2:[
@@ -44,8 +44,8 @@ const routes = {
     name: "Create a Story"
   },
   {
-    path: "/my_stories",
-    name: "My Stories"
+    path: "/my_history",
+    name: "Story Stories"
   },
      {
     path: "/story_countries",
