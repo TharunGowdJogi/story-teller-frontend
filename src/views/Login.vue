@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import { ref, toRaw } from "vue";
 import { useRouter } from "vue-router";
-import UserServices from "../services/UserServices.js";
+import UserServices from "../services/user_services.js";
 
 const router = useRouter();
 const isCreateAccount = ref(false);
