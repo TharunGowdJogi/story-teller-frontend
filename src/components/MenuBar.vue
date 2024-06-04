@@ -2,7 +2,7 @@
 import ocLogo from "/oc_logo.png";
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
-import UserServices from "../services/UserServices";
+import user_services from "../services/user_services";
 
 const router = useRouter();
 const snackbar = ref({
@@ -26,11 +26,11 @@ const routes = {
     name: "Home"
   },
   {
-    path: "/",
+    path: "/create_story",
     name: "Create a Story"
   },
   {
-    path: "/",
+    path: "/my_stories",
     name: "My Stories"
   }
   ],
@@ -40,27 +40,27 @@ const routes = {
     name: "Home"
   },
   {
-    path: "/",
+    path: "/create_story",
     name: "Create a Story"
   },
   {
-    path: "/",
+    path: "/my_stories",
     name: "My Stories"
   },
      {
-    path: "/story-countries",
+    path: "/story_countries",
     name: "Story Countries"
   },
   {
-    path: "/story-genres",
+    path: "/story_genres",
     name: "Story Genres"
   },
   {
-    path: "/story-languages",
+    path: "/story_languages",
     name: "Story Languages"
   },
   {
-    path: "/story-roles",
+    path: "/story_roles",
     name: 'Story Roles'
   }
     ]
@@ -71,7 +71,7 @@ function closeSnackBar() {
 }
 
 function logout() {
-  UserServices.logoutUser()
+  user_services.logout_user()
     .then((data) => {
       console.log(data);
     })
