@@ -31,7 +31,7 @@ const routes = {
   },
   {
     path: "/my_history",
-    name: "Story History"
+    name: "My Stories History"
   }
   ],
   2:[
@@ -45,7 +45,7 @@ const routes = {
   },
   {
     path: "/my_history",
-    name: "Story Stories"
+    name: "My Stories History"
   },
      {
     path: "/story_countries",
@@ -71,7 +71,7 @@ function closeSnackBar() {
 }
 
 function logout() {
-  user_services.logout_user()
+  user_services.logoutUser()
     .then((data) => {
       console.log(data);
     })
