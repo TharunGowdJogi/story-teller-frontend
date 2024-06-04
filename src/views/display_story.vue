@@ -14,7 +14,6 @@
       </v-card-actions>
     </v-card>
     <br/>
-    <v-btn @click="downloadPDF" color="primary" class="mb-4">Get For Offline</v-btn>
     </div>
     <v-alert v-if="errorMessage" type="error">{{ errorMessage }}</v-alert>
   </v-container>
@@ -24,7 +23,6 @@
 import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import bedtimeStoryServices from '../services/bedtime_story_services.js';
-import html2pdf from 'html2pdf.js'; 
 
 const route = useRoute();
 const story = ref({});
@@ -43,18 +41,6 @@ onMounted(async () => {
     errorMessage.value = 'Invalid story ID';
   }
 });
-
-const downloadPDF = () => {
-  const element = document.querySelector(".v-card");
-  const opt = {
-    margin:       0.5,
-    filename:     `${story.value.title}.pdf`,
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2 },
-    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
-  html2pdf().from(element).set(opt).save();
-};
 
 const formatDate = (dateString) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
