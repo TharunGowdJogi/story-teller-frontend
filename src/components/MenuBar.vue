@@ -71,7 +71,7 @@ function closeSnackBar() {
 }
 
 function logout() {
-  user_services.logout_user()
+  user_services.logoutUser()
     .then((data) => {
       console.log(data);
     })
