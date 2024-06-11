@@ -2,6 +2,10 @@ import { createRouter, createWebHistory } from "vue-router";
 const create_story = () => import('./views/create_story.vue');
 const display_story = () => import('./views/display_story.vue');
 const user_history = () => import('./views/user_history.vue');
+const story_countries = () => import('./views/story_countries.vue');
+const story_genres = () => import('./views/story_genres.vue');
+const story_languages = () => import('./views/story_languages.vue');
+const story_roles = () => import('./views/story_roles.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -30,6 +34,26 @@ const router = createRouter({
       path: '/my_history',
       name: 'my_history',
       component: user_history,
+    },
+    {
+      path: '/story_countries',
+      name: 'story_countries',
+      component: story_countries,
+    },
+    {
+      path: '/story_genres',
+      name: 'story_genres',
+      component: story_genres,
+    },
+    {
+      path: '/story_languages',
+      name: 'story_languages',
+      component: story_languages,
+    },
+    {
+      path: '/story_roles',
+      name: 'story_roles',
+      component: story_roles,
     },
   ],
 });
