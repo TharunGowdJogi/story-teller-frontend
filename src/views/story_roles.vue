@@ -87,7 +87,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import storyRoleServices from "../services/stoy_role_services";
+import storyRoleServices from "../services/story_role_services";
 import Alert from "../components/Alert.vue";
 
 const roles = ref([]);

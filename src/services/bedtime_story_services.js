@@ -20,5 +20,19 @@ export default {
   },
   get_story_by_user_id(id) {
     return apiClient.get(`stories/user/${id}`);
+  },
+  async get_stories_by_ids(ids) {
+    try {
+      // Fetch each story by ID
+      const requests = ids.map((id) => this.get_story(id));
+      const responses = await Promise.all(requests);
+  
+      // Extract the data from each response
+      const stories = responses.map((response) => response.data);
+      return { data: stories };
+    } catch (error) {
+      console.error('Error fetching stories by IDs:', error);
+      throw error;
+    }
   }
 };

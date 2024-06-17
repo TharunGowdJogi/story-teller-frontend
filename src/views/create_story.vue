@@ -12,7 +12,7 @@
           </div>
         </v-col>
       </v-row>
-      <v-btn @click="nextStep">Next</v-btn>
+      <v-btn @click="nextStep" v-if="genres.length != 0">Next</v-btn>
     </div>
 
     <div v-if="step === 2">
@@ -78,7 +78,7 @@
 import { ref, onMounted } from 'vue';
 import GenreServices from '../services/story_genre_services';
 import CountryServices from '../services/story_country_services';
-import RoleServices from '../services/stoy_role_services';
+import RoleServices from '../services/story_role_services';
 import LanguageServices from '../services/story_language_services';
 import storyServices from '../services/bedtime_story_services';
 import { useRouter } from 'vue-router';
