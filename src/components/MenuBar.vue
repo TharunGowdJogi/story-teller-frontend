@@ -45,8 +45,12 @@ const routes = {
   },
   {
     path: "/my_history",
-    name: "My Stories History"
+    name: "My Stories"
   },
+  {
+      path: "/all_stories",
+      name: "All Stories",
+    },
      {
     path: "/story_countries",
     name: "Story Countries"

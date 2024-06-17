@@ -6,6 +6,8 @@ const story_countries = () => import('./views/story_countries.vue');
 const story_genres = () => import('./views/story_genres.vue');
 const story_languages = () => import('./views/story_languages.vue');
 const story_roles = () => import('./views/story_roles.vue');
+const all_stories = () => import('./views/all_stories.vue');
+const edit_story = () => import('./views/edit_story.vue');
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -54,6 +56,16 @@ const router = createRouter({
       path: '/story_roles',
       name: 'story_roles',
       component: story_roles,
+    },
+    {
+      path: '/all_stories/',
+      name: 'all_stories',
+      component: all_stories,
+    },
+    {
+      path: '/edit_story/:id',
+      name: 'edit_story',
+      component: edit_story,
     },
   ],
 });
