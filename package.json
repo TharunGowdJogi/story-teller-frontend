@@ -10,7 +10,6 @@
     "@mdi/font": "^7.0.96",
     "axios": "^1.1.3",
     "bootstrap": "^5.2.3",
-    "html2pdf.js": "^0.10.1",
     "cross-env": "^7.0.3",
     "eslint": "^8.28.0",
     "eslint-plugin-vue": "^9.7.0",
