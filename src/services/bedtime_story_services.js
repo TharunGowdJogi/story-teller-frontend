@@ -21,6 +21,9 @@ export default {
   get_story_by_user_id(id) {
     return apiClient.get(`stories/user/${id}`);
   },
+  get_recommendations(userId) {
+    return apiClient.get(`stories/recommendations/${userId}`);
+  },
   async get_stories_by_ids(ids) {
     try {
       // Fetch each story by ID
