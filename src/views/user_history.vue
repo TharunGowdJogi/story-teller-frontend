@@ -3,7 +3,7 @@
     <v-card>
       <v-data-table
         :headers="headers"
-        :items="stories"
+        :items="filteredStories"
         class="elevation-1"
         item-key="story_id"
         :sort-by="[{ key: 'story_id', order: 'asc' }]"
@@ -12,6 +12,12 @@
           <v-toolbar flat>
             <v-toolbar-title>My Stories</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
+            <v-text-field
+              v-model="search"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
             <v-spacer></v-spacer>
             <v-btn
               color="primary"
@@ -25,7 +31,7 @@
         </template>
 
         <template v-slot:[`item.actions`]="{ item }">
-          <v-icon small class="mr-2" @click="openEditModal(item)">
+          <v-icon small class="mr-2" @click="openEdit(item)">
             mdi-pencil
           </v-icon>
           <v-icon small @click="openDeleteModal(item)"> mdi-delete </v-icon>
@@ -33,32 +39,6 @@
         </template>
       </v-data-table>
     </v-card>
-
-    <!-- Edit Story Dialog -->
-    <v-dialog v-model="dialog.edit" max-width="500px">
-      <v-card>
-        <v-card-title>
-          <span class="text-h5">Edit Story</span>
-        </v-card-title>
-        <v-card-text>
-          <v-form ref="editForm" v-model="valid">
-            <v-text-field
-              v-model="editedStory.story_name"
-              label="Story Name"
-              :rules="[rules.required]"
-              required
-            ></v-text-field>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="blue darken-1" text @click="closeEditModal"
-            >Cancel</v-btn
-          >
-          <v-btn color="blue darken-1" text @click="saveEdit">Save</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
 
     <!-- Delete Story Dialog -->
     <v-dialog v-model="dialog.delete" max-width="500px">
@@ -86,9 +66,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
-import storyStoryServices from "../services/bedtime_story_services";
+import bedtimeStoryServices from "../services/bedtime_story_services";
 import Alert from "../components/Alert.vue";
 
 const stories = ref([]);
@@ -115,9 +95,24 @@ const headers = [
   { title: "Actions", key: "actions", sortable: false },
 ];
 
+const search = ref('');
+const filteredStories = computed(() => {
+  return stories.value.filter(story => {
+    const searchKey = search.value.toLowerCase();
+    return (
+      story.story_id.toString().includes(searchKey) ||
+      story.title.toLowerCase().includes(searchKey) ||
+      (story.story_genre && story.story_genre.genre_name.toLowerCase().includes(searchKey)) ||
+      (story.story_country && story.story_country.country_name.toLowerCase().includes(searchKey)) ||
+      (story.story_role && story.story_role.role_name.toLowerCase().includes(searchKey)) ||
+      (story.story_language && story.story_language.language_name.toLowerCase().includes(searchKey))
+    );
+  });
+});
+
 const fetchStories = async () => {
   try {
-    const response = await storyStoryServices.get_all_Stories({ author_id: user.value.id});
+    const response = await bedtimeStoryServices.get_all_Stories({ author_id: user.value.id });
     stories.value = response.data;
   } catch (error) {
     snackbar.value.value = true;
@@ -125,33 +120,8 @@ const fetchStories = async () => {
   }
 };
 
-const openEditModal = (story) => {
-  editedStory.value = { ...story, create: false };
-  dialog.value.edit = true;
-};
-
-const closeEditModal = () => {
-  dialog.value.edit = false;
-};
-
-const saveEdit = async () => {
-  try {
-    if (editedStory.value.create) {
-      await storyStoryServices.create_story(editedStory.value);
-      snackbar.value.text = "Story created successfully";
-    } else {
-      await storyStoryServices.update_story(editedStory.value);
-      snackbar.value.text = "Story updated successfully";
-    }
-    fetchStories();
-    closeEditModal();
-    snackbar.value.value = true;
-    snackbar.value.color = "green";
-  } catch (error) {
-    snackbar.value.value = true;
-    snackbar.value.text = "Failed to update story";
-    snackbar.value.color = "red";
-  }
+const openEdit = (story) => {
+  router.push({ name: 'edit_story', params: { id: story.story_id } });
 };
 
 const openDeleteModal = (story) => {
@@ -165,7 +135,7 @@ const closeDeleteModal = () => {
 
 const confirmDelete = async () => {
   try {
-    await storyStoryServices.delete_story(editedStory.value.story_id);
+    await bedtimeStoryServices.delete_story(editedStory.value.story_id);
     fetchStories();
     closeDeleteModal();
     snackbar.value.value = true;
@@ -179,19 +149,19 @@ const confirmDelete = async () => {
 };
 
 const createStory = () => {
-  router.push({ name: 'create_story'})
+  router.push({ name: 'create_story' });
 };
 
 const displayStory = (story) => {
-    router.push({ name: "display_story", params: { id: story.story_id }})
-}
+  router.push({ name: "display_story", params: { id: story.story_id } });
+};
 
-onMounted(async ()=> {
-  user.value = JSON.parse(localStorage.getItem("user"))
-  if( !user || user.value.role_id != 2) {
-    router.push({ name: "login"})
+onMounted(async () => {
+  user.value = JSON.parse(localStorage.getItem("user"));
+  if (!user.value || user.value.role_id !== 2) {
+    router.push({ name: "login" });
   } else {
     await fetchStories();
   }
-})
+});
 </script>

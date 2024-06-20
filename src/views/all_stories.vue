@@ -3,7 +3,7 @@
     <v-card>
       <v-data-table
         :headers="headers"
-        :items="stories"
+        :items="filteredStories"
         class="elevation-1"
         item-key="story_id"
         :sort-by="[{ key: 'story_id', order: 'asc' }]"
@@ -12,6 +12,12 @@
           <v-toolbar flat>
             <v-toolbar-title>My Stories</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
+            <v-text-field
+              v-model="search"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
             <v-spacer></v-spacer>
             <v-btn
               color="primary"
@@ -60,9 +66,9 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
-import storyStoryServices from "../services/bedtime_story_services";
+import bedtimeStoryServices from "../services/bedtime_story_services";
 import Alert from "../components/Alert.vue";
 
 const stories = ref([]);
@@ -89,9 +95,25 @@ const headers = [
   { title: "Actions", key: "actions", sortable: false },
 ];
 
+const search = ref('');
+const filteredStories = computed(() => {
+  return stories.value.filter(story => {
+    const searchKey = search.value.toLowerCase();
+    return (
+      story.story_id.toString().includes(searchKey) ||
+      story.title.toLowerCase().includes(searchKey) ||
+      story.text.toLowerCase().includes(searchKey) ||
+      (story.story_genre && story.story_genre.genre_name.toLowerCase().includes(searchKey)) ||
+      (story.story_country && story.story_country.country_name.toLowerCase().includes(searchKey)) ||
+      (story.story_role && story.story_role.role_name.toLowerCase().includes(searchKey)) ||
+      (story.story_language && story.story_language.language_name.toLowerCase().includes(searchKey))
+    );
+  });
+});
+
 const fetchStories = async () => {
   try {
-    const response = await storyStoryServices.get_all_Stories();
+    const response = await bedtimeStoryServices.get_all_Stories();
     stories.value = response.data;
   } catch (error) {
     snackbar.value.value = true;
@@ -100,9 +122,8 @@ const fetchStories = async () => {
 };
 
 const openEdit = (story) => {
-    router.push({ name:'edit_story',params: { id: story.story_id}})
+  router.push({ name: 'edit_story', params: { id: story.story_id } });
 };
-
 
 const openDeleteModal = (story) => {
   editedStory.value = { ...story, create: false };
@@ -115,7 +136,7 @@ const closeDeleteModal = () => {
 
 const confirmDelete = async () => {
   try {
-    await storyStoryServices.delete_story(editedStory.value.story_id);
+    await bedtimeStoryServices.delete_story(editedStory.value.story_id);
     fetchStories();
     closeDeleteModal();
     snackbar.value.value = true;
@@ -129,19 +150,19 @@ const confirmDelete = async () => {
 };
 
 const createStory = () => {
-  router.push({ name: 'create_story'})
+  router.push({ name: 'create_story' });
 };
 
 const displayStory = (story) => {
-    router.push({ name: "display_story", params: { id: story.story_id }})
-}
+  router.push({ name: "display_story", params: { id: story.story_id } });
+};
 
-onMounted(async ()=> {
-  user.value = JSON.parse(localStorage.getItem("user"))
-  if( !user || user.value.role_id != 2) {
-    router.push({ name: "login"})
+onMounted(async () => {
+  user.value = JSON.parse(localStorage.getItem("user"));
+  if (!user.value || user.value.role_id !== 2) {
+    router.push({ name: "login" });
   } else {
     await fetchStories();
   }
-})
+});
 </script>
